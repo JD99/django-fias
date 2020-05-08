@@ -1,6 +1,6 @@
 # coding: utf-8
 from __future__ import unicode_literals, absolute_import
-
+import shutil
 import rarfile
 import tempfile
 from progress.bar import Bar
@@ -52,6 +52,7 @@ class LocalArchiveTableList(TableList):
         )
         print(result.stderr)
         print("convert complete")
+        shutil.rmtree(dir1)
         return fname
 
     def load_data(self, source):
