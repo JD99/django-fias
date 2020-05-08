@@ -58,13 +58,15 @@ class LocalArchiveTableList(TableList):
     def load_data(self, source):
 
         if zipfile.is_zipfile(source):
-            print("convert start")
-            source = self.create_rar_on_zip(source)
-
-        try:
-            archive = rarfile.RarFile(source)
-        except (rarfile.NotRarFile, rarfile.BadRarFile) as e:
-            raise BadArchiveError('Archive: `{0}`, ver: `{1}` corrupted'
+            # print("convert start")
+            # source = self.create_rar_on_zip(source)
+            print("is zip file")
+            archive = zipfile.ZipFile(source)
+        else:
+            try:
+                archive = rarfile.RarFile(source)
+            except (rarfile.NotRarFile, rarfile.BadRarFile) as e:
+                raise BadArchiveError('Archive: `{0}`, ver: `{1}` corrupted'
                                   ' or is not rar-archive'.format(source))
 
         if not archive.namelist():
