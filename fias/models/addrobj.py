@@ -34,8 +34,8 @@ class AddrObj(June2016Update):
     previd = UUIDField('Идентификатор записи связывания с предыдушей исторической записью', blank=True, null=True)
     nextid = UUIDField('Идентификатор записи  связывания с последующей исторической записью', blank=True, null=True)
 
-    formalname = models.CharField('Формализованное наименование', max_length=120, db_index=True)
-    offname = models.CharField('Официальное наименование', max_length=120, blank=True, null=True)
+    formalname = models.CharField('Формализованное наименование', max_length=250, db_index=True)
+    offname = models.CharField('Официальное наименование', max_length=250, blank=True, null=True)
     shortname = models.CharField('Краткое наименование типа объекта', max_length=10, db_index=True)
     aolevel = models.PositiveSmallIntegerField('Уровень адресного объекта', db_index=True)
 
