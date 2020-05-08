@@ -4,7 +4,8 @@ from __future__ import unicode_literals, absolute_import
 import rarfile
 import tempfile
 from progress.bar import Bar
-
+import zipfile
+from subprocess import PIPE, run
 from fias.compat import urlretrieve, HTTPError
 from fias.importer.signals import (
     pre_download, post_download,
@@ -37,7 +38,28 @@ class LocalArchiveTableList(TableList):
         archive.extractall(path)
         return path
 
+    def create_rar_on_zip(self, source):
+        dir1 = tempfile.mkdtemp()
+        dir2 = tempfile.mkdtemp()
+        with zipfile.ZipFile(source) as zf:
+            zf.extractall(dir1)
+        fname = f'{dir2}/tecmint.rar'
+        script = f"rar -r -ep1 -m0 a {fname} {dir1}/*"
+        command = [script]
+        print("command", command)
+        result = run(
+            command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True
+        )
+        print(result.stderr)
+        print("convert complete")
+        return fname
+
     def load_data(self, source):
+
+        if zipfile.is_zipfile(source):
+            print("convert start")
+            source = self.create_rar_on_zip(source)
+
         try:
             archive = rarfile.RarFile(source)
         except (rarfile.NotRarFile, rarfile.BadRarFile) as e:
